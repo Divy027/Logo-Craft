@@ -1,7 +1,7 @@
 import CONFIG from "../config";
 import Web3 from "web3";
-import { ToastContainer, toast } from "react-toastify";
-import { ethers, utils } from "ethers";
+import {  toast } from "react-toastify";
+import {  utils } from "ethers";
 
 declare global {
     interface Window {
