@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { CONNECT } from "../actions";
-import { connectWallet, connectedChain, getBalance } from "../utils";
+import { connectWallet } from "../utils";
 import CONFIG from "../config";
-import { ToastContainer,toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
  const Header = ()=> {
     const dispatch = useDispatch();

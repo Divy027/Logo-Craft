@@ -4,7 +4,7 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import enter from "../assets/enter.png"
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { CONNECT } from "../actions";
 import { connectWallet, getBalance } from "../utils";
@@ -20,13 +20,9 @@ import Header from '../components/Header';
 const Home = () => {
   const dispatch = useDispatch();
   const storeData = useSelector((status: any) => status);
-  const [walletStatus, setWalletStatus] = useState({
-    status: ``,
-    address: ``,
-  });
   const [tokenAddress, setTokenAddress] = useState('');
   const [blockchain, setBlockchain] = useState("Zeta");
-  const [logoImage, setLogoImage] = useState(null); // File object
+  const [logoImage, setLogoImage] = useState(""); // File object
   const [step, setStep] = useState(0);
   
 
@@ -149,7 +145,7 @@ const Home = () => {
       )}
 
       {step == 2 && (
-        <Preview setStep={setStep} handleUpload={""}/>
+        <Preview setStep={setStep} logoImage = {logoImage} setLogoImage = {setLogoImage}/>
       )}
     </div>
     
