@@ -39,16 +39,48 @@ import 'react-toastify/dist/ReactToastify.css';
         localStorage.setItem(CONFIG.WALLET_STATUS_LOCALSTORAGE, "disconnect");
         localStorage.setItem(CONFIG.WALLET_ADRESS_LOCALSTORAGE, "");
       };
+
+      async function isConnected() {
+        const accounts = await window.ethereum.request({method: 'eth_accounts'});       
+        if (accounts.length) {
+           console.log(`You're connected to: ${accounts[0]}`);
+           dispatch(
+            CONNECT({
+              wallet: `connected`,
+              address: accounts[0],
+            })
+          );
+          localStorage.setItem(CONFIG.WALLET_STATUS_LOCALSTORAGE, "connected");
+          localStorage.setItem(CONFIG.WALLET_ADRESS_LOCALSTORAGE, accounts[0]);
+        } else {
+           console.log("Metamask is not connected");
+           dispatch(
+            CONNECT({
+              wallet: `disconnect`,
+              address: ``,
+            })
+          );
+          localStorage.setItem(CONFIG.WALLET_STATUS_LOCALSTORAGE, "disconnect");
+          localStorage.setItem(CONFIG.WALLET_ADRESS_LOCALSTORAGE, "");
+        }
+     }
     
-      useEffect(() => {
-        const get_walletStatus: any = localStorage.getItem(CONFIG.WALLET_STATUS_LOCALSTORAGE);
-        const get_walletAddress: any = localStorage.getItem(CONFIG.WALLET_ADRESS_LOCALSTORAGE);
-        setWalletStatus({
-          ...walletStatus,
-          status: get_walletStatus,
-          address: get_walletAddress,
-        });
-      }, [storeData]);
+     useEffect(()=> {
+      try{
+        if(!window.ethereum.isConnected() || !window.ethereum._metamask.isUnlocked()){
+          dispatch(
+            CONNECT({
+              wallet: `disconnect`,
+              address: ``,
+            })
+          );
+          localStorage.setItem(CONFIG.WALLET_STATUS_LOCALSTORAGE, "disconnect");
+          localStorage.setItem(CONFIG.WALLET_ADRESS_LOCALSTORAGE, "");
+        }
+      }catch{
+  
+      }
+    }, [])
     
       useEffect(() => {
         try {
@@ -75,14 +107,16 @@ import 'react-toastify/dist/ReactToastify.css';
       }, []);
     
       useEffect(() => {
-        const get_walletStatus: any = localStorage.getItem(CONFIG.WALLET_STATUS_LOCALSTORAGE);
-        const get_walletAddress: any = localStorage.getItem(CONFIG.WALLET_ADRESS_LOCALSTORAGE);
-        dispatch(
-          CONNECT({
-            wallet: get_walletStatus,
-            address: get_walletAddress,
-          })
-        );
+        const fetchData = async () => {
+          try {
+            await isConnected();
+          } catch (error) {
+            console.error("Error fetching metamask:", error);
+            // Handle errors if needed
+          }
+        };
+    
+        fetchData();
       }, []);
     return(
         <div className=" mx-auto flex items-center justify-between py-6 px-4 bg-opacity-80 backdrop-filter backdrop-blur-lg bg-black">
