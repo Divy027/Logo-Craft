@@ -300,7 +300,7 @@ export const getBalance = async () => {
 
 export const UserRejected = (error: any) => {
   if (error === "User rejected the request.") {
-    toast.error("Please connect your wallet again");
+    toast.error("Please accept request");
     return 1;
   }else {
     return 0;
