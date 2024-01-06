@@ -7,9 +7,9 @@ import enter from "../assets/enter.png"
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { CONNECT } from "../actions";
-import { connectWallet, getBalance } from "../utils";
+import { connectWallet } from "../utils";
 import CONFIG from "../config";
-import { ToastContainer,toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import Preview from '../components/Preview';
 // import Progress from '../components/Progress';
@@ -56,87 +56,57 @@ const Home = () => {
 
  
   return (
-    <>
+    <div className=''>
     <Header/>
     <ToastContainer/>
-    <div className="min-h-screen flex items-center justify-center">
+    <div className=" flex items-center justify-center my-[40%] sm:my-0 sm:min-h-screen overflow-hidden">
       {step == 0 && (
         <div className="container mx-auto px-4">
-          <div className="flex flex-col items-center justify-center h-full">
-            <h1 className="text-5xl font-bold tracking-tight mb-4 text-black">
-              LogoCraft: Unleash Your Token's Personality
-            </h1>
-            <p className="text-xl mb-8 text-gray-600">
-              Customize ERC20 logos for any EVM blockchain, express your style, stand out from the crowd.
-            </p>
-            {/* <button 
-            className="bg-white text-black font-bold py-4 px-8 rounded-full border border-black flex items-center justify-center hover:border-blue-500 hover:text-blue-500"
-            onClick={()=> setStep(1)}
+        <div className="flex flex-col items-center justify-center h-full ">
+          <h1 className="text-xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-2 sm:mb-4 text-black text-center">
+            LogoCraft: Unleash Your Token's Personality
+          </h1>
+          <p className="text-sm sm:text-xl mb-4 sm:mb-6 text-gray-600 text-center">
+            Customize ERC20 logos for any EVM blockchain, express your style, stand out from the crowd.
+          </p>
+          {storeData.wallet === "connected" ? (
+            <button
+              className="bg-white text-black font-bold py-2 sm:py-3 px-4 sm:px-6 rounded-full border border-black flex items-center justify-center hover:border-blue-500 hover:text-blue-500"
+              onClick={() => setStep(1)}
             >
-              <span> Connect Wallet</span>
+              <span>
+                {storeData?.address
+                  ? storeData?.address?.substr(0, 6) + "..." + storeData?.address?.substr(storeData?.address.length - 4, 4)
+                  : "Connect Wallet"}
+              </span>
               <img
                 src={enter}
                 alt="WalletIcon"
-                width={20}
-                className="group-hover:translate-x-1 transition ease-in-out duration-300"
-                onClick={() => setStep(2)}
+                width={18}
+                className="group-hover:translate-x-1 transition ease-in-out duration-300 ml-2"
               />
-            </button> */}
-            {storeData.wallet === "connected" ? (
-              <button 
-              className="bg-white text-black font-bold py-4 px-8 rounded-full border border-black flex items-center justify-center hover:border-blue-500 hover:text-blue-500"
-              onClick={()=> setStep(1)}
-              >
-                <span>
-                {storeData?.address
-                  ? storeData?.address?.substr(0, 6) +
-                    "..." +
-                    storeData?.address?.substr(
-                      storeData?.address.length - 4,
-                      4
-                    )
-                  : "Connect Wallet"}
-                </span>
-               
-                <img
-                  src={enter}
-                  alt="WalletIcon"
-                  width={20}
-                  className="group-hover:translate-x-1 transition ease-in-out duration-300"
-                  
-                />
-              </button>
-            ): (
-          
-            <button className="bg-white text-black font-bold py-4 px-8 rounded-full border border-black hover:border-blue-500 hover:text-blue-500">
-
-            {storeData.wallet === "connected" ? (
-              <span
-                onClick={handleDisConnect}
-              >
-                {storeData?.address
-                  ? storeData?.address?.substr(0, 6) +
-                    "..." +
-                    storeData?.address?.substr(
-                      storeData?.address.length - 4,
-                      4
-                    )
-                  : "Connect Wallet"}
-              </span>
-            ) : (
-              <>
-                <span
-                  onClick={handleConnect}
-                >
-                  Connect Wallet
-                </span>
-              </>
-            )}
-            
             </button>
-              )}    
-          </div>
+          ) : (
+            <button
+              className="bg-white text-black font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-full border border-black hover:border-blue-500 hover:text-blue-500"
+              onClick={storeData.wallet === "connected" ? handleDisConnect : handleConnect}
+            >
+              {storeData.wallet === "connected" ? (
+                <span>
+                  {storeData?.address
+                    ? storeData?.address?.substr(0, 6) + "..." + storeData?.address?.substr(storeData?.address.length - 4, 4)
+                    : "Disconnect Wallet"}
+                </span>
+              ) : (
+                <span>Connect Wallet</span>
+              )}
+            </button>
+          )}
         </div>
+      </div>
+      
+      
+      
       )}
       
 
@@ -145,11 +115,11 @@ const Home = () => {
       )}
 
       {step == 2 && (
-        <Preview setStep={setStep} logoImage = {logoImage} setLogoImage = {setLogoImage}/>
+        <Preview setStep={setStep} logoImage = {logoImage} setLogoImage = {setLogoImage} tokenAddress={tokenAddress} />
       )}
     </div>
     
-    </>
+    </div>
   )
 }
 
