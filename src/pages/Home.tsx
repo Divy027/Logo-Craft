@@ -12,7 +12,6 @@ import CONFIG from "../config";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import Preview from '../components/Preview';
-// import Progress from '../components/Progress';
 import Form from '../components/Form';
 import Header from '../components/Header';
 
