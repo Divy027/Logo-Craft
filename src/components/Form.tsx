@@ -1,8 +1,7 @@
 import { ethers } from "ethers";
 import { toast } from "react-toastify";
-import { connectedChain } from "../utils";
-import CONFIG from "../config";
 import {useEffect} from "react";
+import { getRPCUrl } from "../services";
 interface FormProps {
   // ... props for form data and handlers
   tokenAddress : string,
@@ -16,7 +15,10 @@ const Form = (props: FormProps) => {
     const isValidERC20Address = async(address : string,blockchain: string)=> {
         try {
             if(window.ethereum){
-                await getRPCUrl(blockchain);
+                const res = await getRPCUrl(blockchain);
+                if(!res){
+                    return null;
+                }
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 console.log(provider);
                 // Create an instance of the ERC-20 contract
@@ -39,30 +41,7 @@ const Form = (props: FormProps) => {
 
            
     };
-    const getRPCUrl = (blockchain: string) => {
-        try{
-            switch (blockchain) {
-                case 'Zeta':
-                    return connectedChain(CONFIG.Zeta_CHAINID); 
-                case 'polygon':
-                    return connectedChain(CONFIG.Matic_CHAINID); 
-                case 'ethereum':
-                    return connectedChain(CONFIG.Eth_CHAINID); 
-                case 'base':
-                    return connectedChain(CONFIG.Base_CHAINID); 
-                case 'bsc':
-                    return connectedChain(CONFIG.Bnb_CHAINID); 
-                case 'avax':
-                    return connectedChain(CONFIG.Avax_CHAINID); 
-        
-                default:
-                    throw new Error('Unsupported blockchain');
-            }
-        }catch(e: any){
-            toast.error(e.message);
-        }       
-        
-    };
+    
     useEffect(() => {
         console.log("gajb->",props.blockchain);
      
@@ -104,7 +83,7 @@ const Form = (props: FormProps) => {
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
                     />
                 </div>
-                <div className="mb-4">
+                <div className="mb-4 relative">
                     <label htmlFor="blockchain" className="block text-black font-bold mb-2">
                         Blockchain
                     </label>
@@ -115,28 +94,29 @@ const Form = (props: FormProps) => {
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
                     >
                         <option value="Zeta">Zeta chain testnet</option>
-                        <option value="polygon">Polygon mainnet</option>
-                        <option value="ethereum">Ethereum mainnet</option>
-                        <option value="base">Base mainnet</option>
-                        <option value="bsc">Binance smart chain mainnet</option>
-                        <option value="avax">Avalanche C-chain mainnet</option>
+                        <option value="polygon">Polygon mumbai</option>
+                        <option value="ethereum">Ethereum seopolia testnet</option>
+                        <option value="base">Base goerli testnet</option>
+                        <option value="bsc">BNB Smart Chain Testnet</option>
+                        <option value="avax">Avalanche Fuji Testnet</option>
                         {/* ... blockchain options */}
                     </select>
                 </div>
 
                     <button
                     type="submit"
-                    className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-2 px-4 rounded-full"
+                    className={`bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-2 px-4 rounded-full ${props.tokenAddress ? '' : 'opacity-50 cursor-not-allowed'}`}
                     onClick={async() => {
                             const Valid = await isValidERC20Address(props.tokenAddress,props.blockchain)
-                            if(Valid){
+                            if (Valid) {
                                 props.setStep(2);
-                            }else{
-                                toast.error("Not Valid Token Address :(")
-                            }
-                            
-                        
+                              } else if (Valid === false) {
+                                toast.error("Not a Valid Token Address :(");
+                              } else {
+                                // User reject handled already
+                              }
                     }}
+                    disabled={props.tokenAddress === ""}
                 >
                     Continue
                 </button>
