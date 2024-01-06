@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { CONNECT } from "../actions";
 import { connectWallet } from "../utils";
+import Logo from "../assets/Logo Craft.jpg";
 import CONFIG from "../config";
 import 'react-toastify/dist/ReactToastify.css';
  const Header = ()=> {
@@ -118,34 +119,31 @@ import 'react-toastify/dist/ReactToastify.css';
         fetchData();
       }, []);
     return(
-        <div className=" mx-auto flex items-center justify-between py-6 px-4 bg-opacity-80 backdrop-filter backdrop-blur-lg bg-black">
-            <p className='text-white font-bold'> Logo Craft</p>
-            <button className="bg-white text-black font-bold py-4 px-8 rounded-full border border-black hover:border-blue-500 hover:text-blue-500">
-
-            {storeData.wallet === "connected" ? (
-              <span
-                onClick={handleDisConnect}
-              >
-                {storeData?.address
-                  ? storeData?.address?.substr(0, 6) +
-                    "..." +
-                    storeData?.address?.substr(
-                      storeData?.address.length - 4,
-                      4
-                    )
-                  : "Connect Wallet"}
-              </span>
-            ) : (
-              <>
-                <span
-                  onClick={handleConnect}
-                >
-                  Connect Wallet
-                </span>
-              </>
-            )}
-            </button>    
+      <div className="mx-auto flex items-center justify-between py-6 px-4 bg-opacity-80 backdrop-filter backdrop-blur-lg bg-black">
+        <div className="flex items-center cursor-pointer">
+          <img
+            src={Logo} // Replace with your logo image source
+            alt="Logo"
+            className="h-12 w-12 mr-3 rounded-full" // Adjust the size as needed
+          />
+          <div className="text-white">
+            <p className="font-bold text-lg">Logo Craft</p>
+            <p className="text-sm opacity-75 hidden sm:block">Crafting Unique Logos</p>
+          </div>
         </div>
+        <button className="bg-white text-black font-bold py-2 px-6 rounded-full border border-black hover:border-blue-500 hover:text-blue-500">
+          {storeData.wallet === "connected" ? (
+            <span onClick={handleDisConnect}>
+              {storeData?.address
+                ? `${storeData?.address.substr(0, 6)}...${storeData?.address.substr(storeData?.address.length - 4, 4)}`
+                : "Connect Wallet"}
+            </span>
+          ) : (
+            <span onClick={handleConnect}>Connect Wallet</span>
+          )}
+        </button>
+      </div>
+
     )
 }
 export default Header;
